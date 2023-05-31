@@ -6,7 +6,7 @@ export default function CadastroProprietario() {
     nome: '',
     cpf: '',
     email: '',
-    telefone: '',
+    telefone: '', 
   });
 
   const [errorMsg, setErrorMsg] = useState('');
@@ -23,7 +23,7 @@ export default function CadastroProprietario() {
     e.preventDefault();
 
     if (Object.values(formData).some((value) => value === '')) {
-      setErrorMsg('Por favor, preencha todos os campos.');
+      setErrorMsg('Por favor, preencha todos os campos. ');
       return;
     }
 

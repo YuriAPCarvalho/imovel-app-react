@@ -13,7 +13,7 @@ export default function CadastroProprietario() {
   const [successMsg, setSuccessMsg] = useState('');
 
   const handleChange = (e) => {
-    setFormData((prevFormData) => ({
+    setFormData((prevFormData) => ({ 
       ...prevFormData,
       [e.target.name]: e.target.value,
     }));

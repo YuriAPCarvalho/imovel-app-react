@@ -21,7 +21,7 @@ export default function Navbar() {
             Cadastro
           </a>
           <ul className="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-            <li><Link className="dropdown-item" to="/CadastroProprietario">Proprietario</Link></li>
+            <li><Link className="dropdown-item" to="/ListaProprietario">Proprietario</Link></li>
             <li><Link className="dropdown-item" to="/CadastroImobiliaria">Imobiliária</Link></li>
             <li><Link className="dropdown-item" to="/CadastroContrato">Contrato</Link></li>
             <li><Link className="dropdown-item" to="/CadastroImovel">Imóvel</Link></li>

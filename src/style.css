@@ -9,3 +9,7 @@ body {
 .navbar-nav {
   margin-right: 40px;
 }
+
+.search-input {
+  width: 200px;
+}

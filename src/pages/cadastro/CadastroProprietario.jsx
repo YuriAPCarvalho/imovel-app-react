@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 export default function CadastroProprietario() {
   const [formData, setFormData] = useState({
@@ -113,9 +114,10 @@ export default function CadastroProprietario() {
           />
         </div>
         <div className="col-12">
-          <button className="btn btn-primary" type="submit" id="btnSalvar">
+          <button className="btn btn-dark me-2" type="submit" id="btnSalvar">
             Salvar
           </button>
+        <Link to="/ListaProprietario" className="btn btn-dark">Voltar</Link>
         </div>
       </form>
     </div>

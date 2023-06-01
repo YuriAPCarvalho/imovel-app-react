@@ -8,16 +8,16 @@ import { FormControl } from 'react-bootstrap';
 import '@fortawesome/fontawesome-free/css/all.css';
 import './../../style.css';
 
-export default function ListaProprietario() {
-  const [proprietarios, setProprietarios] = useState([]);
+export default function ListaContrato() {
+  const [contratos, setContrato] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:3000/proprietario')
+    axios.get('http://localhost:3000/contrato')
       .then((response) => {
-        const sortedProprietarios = response.data.sort((a, b) => a.id - b.id);
-        setProprietarios(sortedProprietarios);
-        setProprietarios(response.data);
+        const sortedContrato = response.data.sort((a, b) => a.id - b.id);
+        setContrato(sortedContrato);
+        setContrato(response.data);
       })
       .catch((error) => {
         console.error(error);
@@ -27,9 +27,9 @@ export default function ListaProprietario() {
   library.add(faEdit, faTrash);
 
   const handleDelete = (id) => {
-    axios.delete(`http://localhost:3000/proprietario/${id}`)
+    axios.delete(`http://localhost:3000/contrato/${id}`)
       .then(() => {
-        setProprietarios(proprietarios.filter((proprietario) => proprietario.id !== id));
+        setContrato(contratos.filter((contrato) => contrato.id !== id));
       })
       .catch((error) => {
         console.error(error);
@@ -40,17 +40,17 @@ export default function ListaProprietario() {
     setSearchQuery(e.target.value);
   };
 
-  const filteredProprietarios = proprietarios.filter((proprietario) =>
-    proprietario.nome.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredcontratos = contratos.filter((contrato) =>
+    contrato.nome.toLowerCase().includes(searchQuery.toLowerCase())
   );
   
 
   return (
     <div className="container">
     <div className="col-12">
-      <h1>Lista de Proprietários</h1>
+      <h1>Lista de Contratos</h1>
       <div className="d-flex mb-3">
-        <Link to="/CadastroProprietario" className="btn btn-dark me-auto p-2">Adicionar</Link>    
+        <Link to="/CadastroContrato" className="btn btn-dark me-auto p-2">Adicionar</Link>    
         <FormControl
           type="text"
           className="search-input"
@@ -66,26 +66,31 @@ export default function ListaProprietario() {
         <thead>
           <tr>
             <th scope="col">#</th>
-            <th scope="col">Nome</th>
-            <th scope="col">CPF</th>
-            <th scope="col">Email</th>
-            <th scope="col">Telefone</th>
-            <th scope="col">Ações</th>
+            <th scope="col">Duração</th>
+            <th scope="col">Valor</th>
+            <th scope="col">Data inicio</th>
+            <th scope="col">Condições Específicas</th>
+            <th scope="col">Inquilino</th>
+            <th scope="col">Imovel</th>
+            <th scope="col">Imobiliária</th>
           </tr>
         </thead>
         <tbody>
-          {filteredProprietarios.map((proprietario) => (
-            <tr key={proprietario.id}>
-              <th scope="row">{proprietario.id}</th>
-              <td>{proprietario.nome}</td>
-              <td>{proprietario.cpf}</td>
-              <td>{proprietario.email}</td>
-              <td>{proprietario.telefone}</td>
+          {filteredcontratos.map((contrato) => (
+            <tr key={contrato.id}>
+              <th scope="row">{contrato.id}</th>
+              <td>{contrato.duracao}</td>
+              <td>{contrato.valor}</td>
+              <td>{contrato.dataInicio}</td>
+              <td>{contrato.telcondicoesEspecificasefone}</td>
+              <td>{contrato.inquilinoId}</td>
+              <td>{contrato.imovelId}</td>
+              <td>{contrato.imobiliariaId}</td>
               <td>
-                <Link to={`/EditarProprietario/${proprietario.id}`} className="btn btn-sm btn-primary me-2">
+                <Link to={`/EditarContrato/${contrato.id}`} className="btn btn-sm btn-primary me-2">
                   <FontAwesomeIcon icon={faEdit} />
                 </Link>
-                <button className="btn btn-sm btn-danger" onClick={() => handleDelete(proprietario.id)}>
+                <button className="btn btn-sm btn-danger" onClick={() => handleDelete(contrato.id)}>
                   <FontAwesomeIcon icon={faTrash} />
                 </button>
               </td>

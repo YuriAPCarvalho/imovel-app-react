@@ -8,16 +8,16 @@ import { FormControl } from 'react-bootstrap';
 import '@fortawesome/fontawesome-free/css/all.css';
 import './../../style.css';
 
-export default function ListaProprietario() {
-  const [proprietarios, setProprietarios] = useState([]);
+export default function ListaInquilino() {
+  const [inquilinos, setInquilinos] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:3000/proprietario')
+    axios.get('http://localhost:3000/inquilino')
       .then((response) => {
-        const sortedProprietarios = response.data.sort((a, b) => a.id - b.id);
-        setProprietarios(sortedProprietarios);
-        setProprietarios(response.data);
+        const sortedInquilinos = response.data.sort((a, b) => a.id - b.id);
+        setInquilinos(sortedInquilinos);
+        setInquilinos(response.data);
       })
       .catch((error) => {
         console.error(error);
@@ -27,9 +27,9 @@ export default function ListaProprietario() {
   library.add(faEdit, faTrash);
 
   const handleDelete = (id) => {
-    axios.delete(`http://localhost:3000/proprietario/${id}`)
+    axios.delete(`http://localhost:3000/inquilino/${id}`)
       .then(() => {
-        setProprietarios(proprietarios.filter((proprietario) => proprietario.id !== id));
+        setInquilinos(inquilinos.filter((inquilino) => inquilino.id !== id));
       })
       .catch((error) => {
         console.error(error);
@@ -40,17 +40,17 @@ export default function ListaProprietario() {
     setSearchQuery(e.target.value);
   };
 
-  const filteredProprietarios = proprietarios.filter((proprietario) =>
-    proprietario.nome.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredInquilinos = inquilinos.filter((inquilino) =>
+    inquilino.nome.toLowerCase().includes(searchQuery.toLowerCase())
   );
   
 
   return (
     <div className="container">
     <div className="col-12">
-      <h1>Lista de Proprietários</h1>
+      <h1>Lista de Inquilinos</h1>
       <div className="d-flex mb-3">
-        <Link to="/CadastroProprietario" className="btn btn-dark me-auto p-2">Adicionar</Link>    
+        <Link to="/CadastroInquilino" className="btn btn-dark me-auto p-2">Adicionar</Link>    
         <FormControl
           type="text"
           className="search-input"
@@ -74,18 +74,18 @@ export default function ListaProprietario() {
           </tr>
         </thead>
         <tbody>
-          {filteredProprietarios.map((proprietario) => (
-            <tr key={proprietario.id}>
-              <th scope="row">{proprietario.id}</th>
-              <td>{proprietario.nome}</td>
-              <td>{proprietario.cpf}</td>
-              <td>{proprietario.email}</td>
-              <td>{proprietario.telefone}</td>
+          {filteredInquilinos.map((inquilino) => (
+            <tr key={inquilino.id}>
+              <th scope="row">{inquilino.id}</th>
+              <td>{inquilino.nome}</td>
+              <td>{inquilino.cpf}</td>
+              <td>{inquilino.email}</td>
+              <td>{inquilino.telefone}</td>
               <td>
-                <Link to={`/EditarProprietario/${proprietario.id}`} className="btn btn-sm btn-primary me-2">
+                <Link to={`/EditarInquilino/${inquilino.id}`} className="btn btn-sm btn-primary me-2">
                   <FontAwesomeIcon icon={faEdit} />
                 </Link>
-                <button className="btn btn-sm btn-danger" onClick={() => handleDelete(proprietario.id)}>
+                <button className="btn btn-sm btn-danger" onClick={() => handleDelete(inquilino.id)}>
                   <FontAwesomeIcon icon={faTrash} />
                 </button>
               </td>

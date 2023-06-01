@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
-export default function CadastroProprietario() {
+export default function CadastroImobiliaria() {
   const [formData, setFormData] = useState({
     nome: '',
     cnpj: '',
@@ -13,11 +14,23 @@ export default function CadastroProprietario() {
   const [successMsg, setSuccessMsg] = useState('');
 
   const handleChange = (e) => {
-    setFormData((prevFormData) => ({ 
+    const { name, value } = e.target;
+    let formattedValue = value;
+
+    if (name === 'nome') {
+      formattedValue = value.toUpperCase();
+    } else if (name === 'cnpj') {
+      formattedValue = formatCNPJ(value);
+    } else if (name === 'telefone') {
+      formattedValue = formatTelefone(value);
+    }
+
+    setFormData((prevFormData) => ({
       ...prevFormData,
-      [e.target.name]: e.target.value,
+      [name]: formattedValue,
     }));
   };
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -27,6 +40,18 @@ export default function CadastroProprietario() {
       return;
     }
 
+    const cnpj = formData.cnpj.replace(/\D/g, ''); // Remover pontos e traço
+    const telefone = formData.telefone.replace(/\D/g, ''); // Remover caracteres não numéricos
+
+    if (cnpj.length !== 14) {
+      setErrorMsg('CNPJ deve ter 14 dígitos.');
+      return;
+    }
+  
+    if (telefone.length !== 11) {
+      setErrorMsg('Telefone deve ter 11 dígitos.');
+      return;
+    }
     setErrorMsg('');
     setSuccessMsg('');
 
@@ -50,6 +75,27 @@ export default function CadastroProprietario() {
         }
       });
   };
+
+  const formatCNPJ = (value) => {
+    // Remove caracteres não numéricos
+    const cnpj = value.replace(/\D/g, '');
+
+    // Formata o CPF
+    const formattedCNPJ = cnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+
+    return formattedCNPJ;
+  };
+
+  const formatTelefone = (value) => {
+    // Remove caracteres não numéricos
+    const phoneNumber = value.replace(/\D/g, '');
+
+    // Formata o número de telefone
+    const formattedPhoneNumber = phoneNumber.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+
+    return formattedPhoneNumber;
+  };
+
   return (
     <div className="container">
     {errorMsg && <div className="alert alert-danger">{errorMsg}</div>}
@@ -81,6 +127,7 @@ export default function CadastroProprietario() {
             name="cnpj"
             value={formData.cnpj}
             onChange={handleChange}
+            maxlength="14"
             required
           />
         </div>
@@ -109,6 +156,7 @@ export default function CadastroProprietario() {
             name="telefone"
             value={formData.telefone}
             onChange={handleChange}
+            maxlength="11"
             required
           />
         </div>

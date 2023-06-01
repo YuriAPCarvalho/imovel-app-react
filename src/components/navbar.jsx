@@ -22,10 +22,10 @@ export default function Navbar() {
           </a>
           <ul className="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
             <li><Link className="dropdown-item" to="/ListaProprietario">Proprietario</Link></li>
-            <li><Link className="dropdown-item" to="/CadastroImobiliaria">Imobiliária</Link></li>
-            <li><Link className="dropdown-item" to="/CadastroContrato">Contrato</Link></li>
-            <li><Link className="dropdown-item" to="/CadastroImovel">Imóvel</Link></li>
-            <li><Link className="dropdown-item" to="/CadastroInquilino">Inquilino</Link></li>
+            <li><Link className="dropdown-item" to="/ListaImobiliaria">Imobiliária</Link></li>
+            <li><Link className="dropdown-item" to="/ListaContrato">Contrato</Link></li>
+            <li><Link className="dropdown-item" to="/ListaImovel">Imóvel</Link></li>
+            <li><Link className="dropdown-item" to="/ListaInquilino">Inquilino</Link></li>
           </ul>
         </li>
       </ul>

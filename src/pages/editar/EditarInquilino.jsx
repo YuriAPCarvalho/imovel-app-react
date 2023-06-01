@@ -4,10 +4,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 
-export default function EditarProprietario() {
+export default function EditarInquilino() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [proprietario, setProprietario] = useState({
+  const [inquilino, setInquilino] = useState({
     nome: '',
     cpf: '',
     email: '',
@@ -17,9 +17,9 @@ export default function EditarProprietario() {
   useEffect(() => {
     if (id) {
       // Requisição GET para obter os dados do proprietário pelo ID
-      axios.get(`http://localhost:3000/proprietario/${id}`)
+      axios.get(`http://localhost:3000/inquilino/${id}`)
         .then((response) => {
-          setProprietario(response.data);
+          setInquilino(response.data);
         })
         .catch((error) => {
           console.error(error);
@@ -28,8 +28,8 @@ export default function EditarProprietario() {
   }, [id]);
 
   const handleChange = (e) => {
-    setProprietario({
-      ...proprietario,
+    setInquilino({
+      ...inquilino,
       [e.target.name]: e.target.value,
     });
   };
@@ -39,20 +39,20 @@ export default function EditarProprietario() {
 
     if (id) {
       // Requisição PUT para atualizar os dados do proprietário
-      axios.put(`http://localhost:3000/proprietario/${id}`, proprietario)
+      axios.put(`http://localhost:3000/inquilino/${id}`, inquilino)
         .then((response) => {
           // Redirecionar para a lista de proprietários após a edição bem-sucedida
-          navigate('/ListaProprietario');
+          navigate('/ListaInquilino');
         })
         .catch((error) => {
           console.error(error);
         });
     } else {
       // Requisição POST para adicionar um novo proprietário
-      axios.post('http://localhost:3000/proprietario', proprietario)
+      axios.post('http://localhost:3000/inquilino', inquilino)
         .then((response) => {
           // Redirecionar para a lista de proprietários após a adição bem-sucedida
-          navigate('/ListaProprietario');
+          navigate('/ListaInquilino');
         })
         .catch((error) => {
           console.error(error);
@@ -62,7 +62,7 @@ export default function EditarProprietario() {
 
   return (
     <div className="container">
-      <h1>{id ? 'Editar Proprietário' : 'Adicionar Proprietário'}</h1>
+      <h1>{id ? 'Editar Inquilino' : 'Adicionar Inquilino'}</h1>
       <form className="row g-3" onSubmit={handleSubmit}>
        <div className="col-md-6">
           <label htmlFor="nome" className="form-label">Nome</label>
@@ -71,7 +71,7 @@ export default function EditarProprietario() {
             className="form-control"
             id="nome"
             name="nome"
-            value={proprietario.nome}
+            value={inquilino.nome}
             onChange={handleChange}
             required
           />
@@ -83,7 +83,7 @@ export default function EditarProprietario() {
             className="form-control"
             id="cpf"
             name="cpf"
-            value={proprietario.cpf}
+            value={inquilino.cpf}
             onChange={handleChange}
             required
           />
@@ -95,7 +95,7 @@ export default function EditarProprietario() {
             className="form-control"
             id="email"
             name="email"
-            value={proprietario.email}
+            value={inquilino.email}
             onChange={handleChange}
             required
           />
@@ -107,14 +107,14 @@ export default function EditarProprietario() {
             className="form-control"
             id="telefone"
             name="telefone"
-            value={proprietario.telefone}
+            value={inquilino.telefone}
             onChange={handleChange}
             required
           />
         </div>
         <div className="col-12">
         <button type="submit" className="btn btn-dark me-2">{id ? 'Salvar' : 'Adicionar'}</button>
-        <Link to="/ListaProprietario" className="btn btn-dark">Voltar</Link>
+        <Link to="/ListaInquilino" className="btn btn-dark">Voltar</Link>
         </div>
       </form>
     </div>

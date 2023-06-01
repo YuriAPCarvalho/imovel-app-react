@@ -8,16 +8,16 @@ import { FormControl } from 'react-bootstrap';
 import '@fortawesome/fontawesome-free/css/all.css';
 import './../../style.css';
 
-export default function ListaProprietario() {
-  const [proprietarios, setProprietarios] = useState([]);
+export default function ListaImobiliaria() {
+  const [imobiliarias, setImobiliaria] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:3000/proprietario')
+    axios.get('http://localhost:3000/imobiliaria')
       .then((response) => {
-        const sortedProprietarios = response.data.sort((a, b) => a.id - b.id);
-        setProprietarios(sortedProprietarios);
-        setProprietarios(response.data);
+        const sortedImobiliarias = response.data.sort((a, b) => a.id - b.id);
+        setImobiliaria(sortedImobiliarias);
+        setImobiliaria(response.data);
       })
       .catch((error) => {
         console.error(error);
@@ -27,9 +27,9 @@ export default function ListaProprietario() {
   library.add(faEdit, faTrash);
 
   const handleDelete = (id) => {
-    axios.delete(`http://localhost:3000/proprietario/${id}`)
+    axios.delete(`http://localhost:3000/imobiliaria/${id}`)
       .then(() => {
-        setProprietarios(proprietarios.filter((proprietario) => proprietario.id !== id));
+        setImobiliaria(imobiliarias.filter((imobiliaria) => imobiliaria.id !== id));
       })
       .catch((error) => {
         console.error(error);
@@ -40,17 +40,17 @@ export default function ListaProprietario() {
     setSearchQuery(e.target.value);
   };
 
-  const filteredProprietarios = proprietarios.filter((proprietario) =>
-    proprietario.nome.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredImobiliarias = imobiliarias.filter((imobiliaria) =>
+  imobiliaria.nome.toLowerCase().includes(searchQuery.toLowerCase())
   );
   
 
   return (
     <div className="container">
     <div className="col-12">
-      <h1>Lista de Proprietários</h1>
+      <h1>Lista de Imobiliárias</h1>
       <div className="d-flex mb-3">
-        <Link to="/CadastroProprietario" className="btn btn-dark me-auto p-2">Adicionar</Link>    
+        <Link to="/CadastroImobiliaria" className="btn btn-dark me-auto p-2">Adicionar</Link>    
         <FormControl
           type="text"
           className="search-input"
@@ -67,25 +67,25 @@ export default function ListaProprietario() {
           <tr>
             <th scope="col">#</th>
             <th scope="col">Nome</th>
-            <th scope="col">CPF</th>
-            <th scope="col">Email</th>
+            <th scope="col">CNPJ</th>
+            <th scope="col">endereco</th>
             <th scope="col">Telefone</th>
             <th scope="col">Ações</th>
           </tr>
         </thead>
         <tbody>
-          {filteredProprietarios.map((proprietario) => (
-            <tr key={proprietario.id}>
-              <th scope="row">{proprietario.id}</th>
-              <td>{proprietario.nome}</td>
-              <td>{proprietario.cpf}</td>
-              <td>{proprietario.email}</td>
-              <td>{proprietario.telefone}</td>
+          {filteredImobiliarias.map((imobiliaria) => (
+            <tr key={imobiliaria.id}>
+              <th scope="row">{imobiliaria.id}</th>
+              <td>{imobiliaria.nome}</td>
+              <td>{imobiliaria.cnpj}</td>
+              <td>{imobiliaria.endereco}</td>
+              <td>{imobiliaria.telefone}</td>
               <td>
-                <Link to={`/EditarProprietario/${proprietario.id}`} className="btn btn-sm btn-primary me-2">
+                <Link to={`/EditarImobiliaria/${imobiliaria.id}`} className="btn btn-sm btn-primary me-2">
                   <FontAwesomeIcon icon={faEdit} />
                 </Link>
-                <button className="btn btn-sm btn-danger" onClick={() => handleDelete(proprietario.id)}>
+                <button className="btn btn-sm btn-danger" onClick={() => handleDelete(imobiliaria.id)}>
                   <FontAwesomeIcon icon={faTrash} />
                 </button>
               </td>

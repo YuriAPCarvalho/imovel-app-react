@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 export default function CadastroInquilino() {
   const [formData, setFormData] = useState({
@@ -13,20 +14,44 @@ export default function CadastroInquilino() {
   const [successMsg, setSuccessMsg] = useState('');
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
+    let formattedValue = value;
+
+    if (name === 'nome') {
+      formattedValue = value.toUpperCase();
+    } else if (name === 'cpf') {
+      formattedValue = formatCPF(value);
+    } else if (name === 'telefone') {
+      formattedValue = formatTelefone(value);
+    }
+
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [e.target.name]: e.target.value,
+      [name]: formattedValue,
     }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+  
     if (Object.values(formData).some((value) => value === '')) {
       setErrorMsg('Por favor, preencha todos os campos.');
       return;
     }
-
+  
+    const cpf = formData.cpf.replace(/\D/g, ''); // Remover pontos e traço
+    const telefone = formData.telefone.replace(/\D/g, ''); // Remover caracteres não numéricos
+  
+    if (cpf.length !== 11) {
+      setErrorMsg('CPF deve ter 11 dígitos.');
+      return;
+    }
+  
+    if (telefone.length !== 11) {
+      setErrorMsg('Telefone deve ter 11 dígitos.');
+      return;
+    }
+  
     setErrorMsg('');
     setSuccessMsg('');
 
@@ -50,6 +75,27 @@ export default function CadastroInquilino() {
         }
       });
   };
+
+  const formatCPF = (value) => {
+    // Remove caracteres não numéricos
+    const cpf = value.replace(/\D/g, '');
+
+    // Formata o CPF
+    const formattedCPF = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+
+    return formattedCPF;
+  };
+
+  const formatTelefone = (value) => {
+    // Remove caracteres não numéricos
+    const phoneNumber = value.replace(/\D/g, '');
+
+    // Formata o número de telefone
+    const formattedPhoneNumber = phoneNumber.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+
+    return formattedPhoneNumber;
+  };
+
   return (
     <div className="container">
     {errorMsg && <div className="alert alert-danger">{errorMsg}</div>}
@@ -81,6 +127,7 @@ export default function CadastroInquilino() {
             name="cpf"
             value={formData.cpf}
             onChange={handleChange}
+            maxlength="11"
             required
           />
         </div>
@@ -109,13 +156,17 @@ export default function CadastroInquilino() {
             name="telefone"
             value={formData.telefone}
             onChange={handleChange}
+            maxlength="11"
             required
           />
         </div>
         <div className="col-12">
-          <button className="btn btn-primary" type="submit" id="btnSalvar">
+          <button className="btn btn-dark me-2" type="submit" id="btnSalvar">
             Salvar
           </button>
+          <Link to="/ListaInquilino" className="btn btn-dark">
+            Voltar
+          </Link>
         </div>
       </form>
     </div>

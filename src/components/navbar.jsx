@@ -1,53 +1,45 @@
-import { Link, useMatch, useResolvedPath } from 'react-router-dom'
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap/dist/js/bootstrap.js';
+import { Navbar as BootstrapNavbar, Nav } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.css";
 
-export default function Navbar() {
+export default function CustomNavbar() {
   return (
-    <nav className='navbar navbar-expand-lg navbar-dark bg-dark fixed-top'>
-      <h3 className="navbar-brand">Imobiliária</h3>
-      <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span className="navbar-toggler-icon"></span>
-    </button>
-    <div className="collapse navbar-collapse" id="navbarNav">
-    <ul className="navbar-nav mr-auto">
-    <li className="nav-item">
-          <Link className="nav-link" to="/">Home</Link>
-        </li>
-        <li className="nav-item dropdown">
-          <a className="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button"
-            data-bs-toggle="dropdown" aria-expanded="false">
-            Cadastro
-          </a>
-          <ul className="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-            <li><Link className="dropdown-item" to="/ListaProprietario">Proprietario</Link></li>
-            <li><Link className="dropdown-item" to="/ListaImobiliaria">Imobiliária</Link></li>
-            <li><Link className="dropdown-item" to="/ListaContrato">Contrato</Link></li>
-            <li><Link className="dropdown-item" to="/ListaImovel">Imóvel</Link></li>
-            <li><Link className="dropdown-item" to="/ListaInquilino">Inquilino</Link></li>
-          </ul>
-        </li>
-      </ul>
-      <ul className="navbar-nav ms-auto">
-        <li className="nav-item">
-          <a className="nav-link" href="#">Sair</a>
-        </li>
-    </ul>
-    </div>
-    </nav>
-  )
-}
-
-function CustomLink({ to, children, ...props }) {
-  const resolvedPath = useResolvedPath(to)
-  const isActive = useMatch({ path: resolvedPath.pathname, end: true })
-
-  return (
-    <li className={isActive ? 'active' : ''}>
-      <Link to={to} {...props}>
-        {children}
-      </Link>
-    </li>
-  )
+    <BootstrapNavbar bg="dark" variant="dark" expand="lg" fixed="top">
+      <BootstrapNavbar.Brand>Imobiliária</BootstrapNavbar.Brand>
+      <BootstrapNavbar.Toggle aria-controls="navbarNav" />
+      <BootstrapNavbar.Collapse id="navbarNav">
+        <Nav className="mr-auto">
+          <Nav.Link as={Link} to="/">
+            Visitas
+          </Nav.Link>
+          <Nav.Link as={Link} to="/ListaProprietario">
+            Proprietários
+          </Nav.Link>
+          <Nav.Link as={Link} to="/ListaImobiliaria">
+            Imobiliárias
+          </Nav.Link>
+          <Nav.Link as={Link} to="/ListaImovel">
+            Imóveis
+          </Nav.Link>
+          <Nav.Link as={Link} to="/ListaInquilino">
+            Inquilínos
+          </Nav.Link>
+          <Nav.Link as={Link} to="/ListaContrato">
+            Contratos
+          </Nav.Link>
+          <Nav.Link as={Link} to="/ListaContrato">
+            Manutenção
+          </Nav.Link>
+          <Nav.Link as={Link} to="/ListaContrato">
+            Avaliação
+          </Nav.Link>
+        </Nav>
+        <Nav className="navbar-nav ms-auto">
+          <Nav.Link as="a" href="#" className="nav-link ml-auto">
+            Sair
+          </Nav.Link>
+        </Nav>
+      </BootstrapNavbar.Collapse>
+    </BootstrapNavbar>
+  );
 }

@@ -1,24 +1,25 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function CadastroContrato() {
   const [formData, setFormData] = useState({
-    duracao: '',
-    valor: '',
-    dataInicio: '',
-    condicoesEspecificas: '',
-    inquilinoId: '',
-    imovelId: '',
-    imobiliariaId: '',
-
+    duracao: "",
+    valor: "",
+    dataInicio: "",
+    condicoesEspecificas: "",
+    inquilinoId: "",
+    imovelId: "",
+    imobiliariaId: "",
   });
 
-  const [errorMsg, setErrorMsg] = useState('');
-  const [successMsg, setSuccessMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
+  const [inquilinos, setInquilinos] = useState([]);
+  const [imoveis, setImoveis] = useState([]);
 
   const handleChange = (e) => {
-    setFormData((prevFormData) => ({ 
+    setFormData((prevFormData) => ({
       ...prevFormData,
       [e.target.name]: e.target.value,
     }));
@@ -27,26 +28,26 @@ export default function CadastroContrato() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (Object.values(formData).some((value) => value === '')) {
-      setErrorMsg('Por favor, preencha todos os campos.');
+    if (Object.values(formData).some((value) => value === "")) {
+      setErrorMsg("Por favor, preencha todos os campos.");
       return;
     }
 
-    setErrorMsg('');
-    setSuccessMsg('');
+    setErrorMsg("");
+    setSuccessMsg("");
 
     axios
-      .post('http://localhost:3000/contrato', formData) 
+      .post("http://localhost:3000/contrato", formData)
       .then((response) => {
-        setSuccessMsg('Contrato cadastrado com sucesso!');
+        setSuccessMsg("Contrato cadastrado com sucesso!");
         setFormData({
-          duracao: '',
-          valor: '',
-          dataInicio: '',
-          condicoesEspecificas: '',
-          inquilinoId: '',
-          imovelId: '',
-          imobiliariaId: '',
+          duracao: "",
+          valor: "",
+          dataInicio: "",
+          condicoesEspecificas: "",
+          inquilinoId: "",
+          imovelId: "",
+          imobiliariaId: "",
         });
       })
       .catch((error) => {
@@ -58,12 +59,33 @@ export default function CadastroContrato() {
         }
       });
   };
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/inquilino")
+      .then((response) => {
+        setInquilinos(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+    axios
+      .get("http://localhost:3000/imovel")
+      .then((response) => {
+        setImoveis(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
   return (
     <div className="container">
-    {errorMsg && <div className="alert alert-danger">{errorMsg}</div>}
-    {successMsg && <div className="alert alert-success">{successMsg}</div>}
-    <h1>Cadastro de Contratos</h1>
-    <form className="row g-3" onSubmit={handleSubmit}>
+      {errorMsg && <div className="alert alert-danger">{errorMsg}</div>}
+      {successMsg && <div className="alert alert-success">{successMsg}</div>}
+      <h1>Cadastro de Contratos</h1>
+      <form className="row g-3" onSubmit={handleSubmit}>
         <div className="col-md-6">
           <label htmlFor="duracao" className="form-label">
             Duração em meses
@@ -80,7 +102,7 @@ export default function CadastroContrato() {
         </div>
         <div className="col-md-6">
           <label htmlFor="valor" className="form-label">
-          Valor em R$
+            Valor em R$
           </label>
           <input
             type="number"
@@ -108,7 +130,7 @@ export default function CadastroContrato() {
         </div>
         <div className="col-md-6">
           <label htmlFor="condicoesEspecificas" className="form-label">
-          Condicoes Especificas
+            Condicoes Especificas
           </label>
           <input
             type="text"
@@ -122,36 +144,51 @@ export default function CadastroContrato() {
         </div>
         <div className="col-md-6">
           <label htmlFor="inquilinoId" className="form-label">
-          Inquilino
+            Inquilino
           </label>
-          <input
-            type="text"
+          <select
             className="form-control"
             id="inquilinoId"
             name="inquilinoId"
             value={formData.inquilinoId}
             onChange={handleChange}
             required
-          />
+          >
+            <option value="">Selecione o Inquilíno</option>
+            {inquilinos.map((inquilino) => (
+              <option key={inquilino.id} value={inquilino.id}>
+                {inquilino.nome}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="col-md-6">
           <label htmlFor="imovelId" className="form-label">
-          Imovel
+            Imóvel
           </label>
-          <input
-            type="text"
+          <select
             className="form-control"
             id="imovelId"
             name="imovelId"
             value={formData.imovelId}
             onChange={handleChange}
             required
-          />
+          >
+            <option value="">Selecione o Imóvel</option>
+            {imoveis.map((imovel) => (
+              <option key={imovel.id} value={imovel.id}>
+                {imovel.descricao}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="col-12">
-          <button className="btn btn-primary" type="submit" id="btnSalvar">
+          <button className="btn btn-dark me-2" type="submit" id="btnSalvar">
             Salvar
           </button>
+          <Link to="/ListaContrato" className="btn btn-dark">
+            Voltar
+          </Link>
         </div>
       </form>
     </div>

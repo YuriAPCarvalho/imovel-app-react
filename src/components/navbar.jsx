@@ -27,10 +27,10 @@ export default function CustomNavbar() {
           <Nav.Link as={Link} to="/ListaContrato">
             Contratos
           </Nav.Link>
-          <Nav.Link as={Link} to="/ListaContrato">
+          <Nav.Link as={Link} to="/ListaManutencao">
             Manutenção
           </Nav.Link>
-          <Nav.Link as={Link} to="/ListaContrato">
+          <Nav.Link as={Link} to="/ListaAvaliacao">
             Avaliação
           </Nav.Link>
         </Nav>

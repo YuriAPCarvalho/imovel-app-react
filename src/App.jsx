@@ -1,5 +1,4 @@
 import Navbar from "./components/navbar";
-import Home from "./pages/Home";
 import "@fortawesome/fontawesome-free/css/all.css";
 import { Routes, Route } from "react-router-dom";
 
@@ -27,27 +26,27 @@ import ListaManutencao from "./pages/lista/ListaManutencao";
 import CadastroManutencao from "./pages/cadastro/CadastroManutencao";
 import EditarManutencao from "./pages/editar/EditarManutencao";
 
+import ListaVisita from "./pages/ListaVisita";
+import CadastroVisita from "./pages/cadastro/CadastroVisita";
+import CadastroAvaliacao from "./pages/cadastro/CadastroAvaliacao";
+
 function App() {
   return (
     <>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Home />} />
-
+        <Route path="/" element={<ListaVisita />} />
+        <Route path="/CadastroVisita" element={<CadastroVisita />} />
+        <Route path="/CadastroAvaliacao" element={<CadastroAvaliacao />} />
+        
         <Route path="/ListaProprietario" element={<ListaProprietario />} />
-        <Route
-          path="/CadastroProprietario"
-          element={<CadastroProprietario />}
-        />
-        <Route
-          path="/EditarProprietario/:id"
-          element={<EditarProprietario />}
-        />
+        <Route path="/CadastroProprietario" element={<CadastroProprietario />} />
+        <Route path="/EditarProprietario/:id" element={<EditarProprietario />}  />
 
         <Route path="/ListaImobiliaria" element={<ListaImobiliaria />} />
         <Route path="/CadastroImobiliaria" element={<CadastroImobiliaria />} />
         <Route path="/EditarImobiliaria/:id" element={<EditarImobiliaria />} />
-
+        
         <Route path="/ListaContrato" element={<ListaContrato />} />
         <Route path="/CadastroContrato" element={<CadastroContrato />} />
         <Route path="/EditarContrato/:id" element={<EditarContrato />} />

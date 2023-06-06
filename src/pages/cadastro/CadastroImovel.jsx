@@ -8,6 +8,7 @@ export default function CadastroImovel() {
     descricao: "",
     proprietarioId: "",
     imobiliariaId: "",
+    imagem: "",
   });
 
   const [errorMsg, setErrorMsg] = useState("");
@@ -42,6 +43,7 @@ export default function CadastroImovel() {
           descricao: "",
           proprietarioId: "",
           imobiliariaId: "",
+          imagem: "",
         });
       })
       .catch((error) => {
@@ -147,6 +149,21 @@ export default function CadastroImovel() {
               </option>
             ))}
           </select>
+        </div>
+        <div className="col-md-12">
+          <label htmlFor="imagem" className="form-label">
+            URL imagem
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="imagem"
+            name="imagem"
+            placeholder="https://url_da_imagem.com.br"
+            value={formData.imagem}
+            onChange={handleChange}
+            required
+          />
         </div>
         <div className="col-12">
           <button className="btn btn-dark me-2" type="submit" id="btnSalvar">

@@ -1,6 +1,8 @@
 import styled from "styled-components";
+import backgroundImage from "../../img/image.png";
 
 export const Container = styled.div`
+  background: url(${backgroundImage}) center/cover no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -26,7 +28,7 @@ export const Content = styled.div`
 export const Label = styled.label`
   font-size: 18px;
   font-weight: 600;
-  color: #676767;
+  color: black;
 `;
 
 export const LabelSignup = styled.label`

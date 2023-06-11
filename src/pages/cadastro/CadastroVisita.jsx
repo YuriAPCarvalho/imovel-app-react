@@ -148,7 +148,7 @@ export default function CadastroImovel() {
           <button className="btn btn-dark me-2" type="submit" id="btnSalvar">
             Salvar
           </button>
-          <Link to="/" className="btn btn-dark">
+          <Link to="/ListaVisita" className="btn btn-dark">
             Voltar
           </Link>
         </div>

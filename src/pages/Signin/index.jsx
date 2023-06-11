@@ -26,13 +26,13 @@ const Signin = () => {
       return;
     }
 
-    navigate("/home");
+    navigate("/ListaVisita");
   };
 
   return (
     <C.Container>
-      <C.Label>SISTEMA DE LOGIN</C.Label>
       <C.Content>
+        <C.Label>GESTÃO DE ALUGUÉIS</C.Label>
         <Input
           type="email"
           placeholder="Digite seu E-mail"

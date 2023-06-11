@@ -35,7 +35,12 @@ export default function CustomNavbar() {
           </Nav.Link>
         </Nav>
         <Nav className="navbar-nav ms-auto">
-          <Nav.Link as="a" href="/" className="nav-link ml-auto">
+          <Nav.Link
+            as="a"
+            href="/"
+            onClick={() => [signout(), navigate("/")]}
+            className="nav-link ml-auto"
+          >
             Sair
           </Nav.Link>
         </Nav>

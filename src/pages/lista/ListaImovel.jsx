@@ -90,7 +90,7 @@ export default function ListaImovel() {
           <FormControl
             type="text"
             className="search-input"
-            placeholder="Pesquisar por nome"
+            placeholder="Pesquisar por endereço"
             value={searchQuery}
             onChange={handleSearch}
           />

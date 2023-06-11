@@ -85,7 +85,7 @@ export default function ListaManutencao() {
           <FormControl
             type="text"
             className="search-input"
-            placeholder="Pesquisar por endereço"
+            placeholder="Pesquisar por descrição"
             value={searchQuery}
             onChange={handleSearch}
           />

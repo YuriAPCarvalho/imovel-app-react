@@ -1,35 +1,89 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Link } from 'react-router-dom';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faEdit, faTrash, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { FormControl } from 'react-bootstrap';
-import '@fortawesome/fontawesome-free/css/all.css';
-import './../../style.css';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faEdit, faTrash, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FormControl } from "react-bootstrap";
+import "@fortawesome/fontawesome-free/css/all.css";
+import "./../../style.css";
 
 export default function ListaContrato() {
-  const [contratos, setContrato] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [contratos, setContratos] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [inquilinos, setInquilinos] = useState({});
+  const [imoveis, setImoveis] = useState({});
+  const [imobiliarias, setImobiliarias] = useState({});
 
   useEffect(() => {
-    axios.get('http://localhost:3000/contrato')
+    axios
+      .get("http://localhost:3000/contrato")
       .then((response) => {
-        const sortedContrato = response.data.sort((a, b) => a.id - b.id);
-        setContrato(sortedContrato);
-        setContrato(response.data);
+        const sortedContratos = response.data.sort((a, b) => a.id - b.id);
+        setContratos(sortedContratos);
       })
       .catch((error) => {
         console.error(error);
       });
   }, []);
 
-  library.add(faEdit, faTrash);
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/inquilino")
+      .then((response) => {
+        const inquilinosData = response.data.reduce(
+          (acc, inquilino) => ({
+            ...acc,
+            [inquilino.id]: inquilino.nome,
+          }),
+          {}
+        );
+        setInquilinos(inquilinosData);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+    axios
+      .get("http://localhost:3000/imovel")
+      .then((response) => {
+        const imoveisData = response.data.reduce(
+          (acc, imovel) => ({
+            ...acc,
+            [imovel.id]: imovel,
+          }),
+          {}
+        );
+        setImoveis(imoveisData);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+    axios
+      .get("http://localhost:3000/imobiliaria")
+      .then((response) => {
+        const imobiliariasData = response.data.reduce(
+          (acc, imobiliaria) => ({
+            ...acc,
+            [imobiliaria.id]: imobiliaria.nome,
+          }),
+          {}
+        );
+        setImobiliarias(imobiliariasData);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+  library.add(faEdit, faTrash, faSearch);
 
   const handleDelete = (id) => {
-    axios.delete(`http://localhost:3000/contrato/${id}`)
+    axios
+      .delete(`http://localhost:3000/contrato/${id}`)
       .then(() => {
-        setContrato(contratos.filter((contrato) => contrato.id !== id));
+        setContratos(contratos.filter((contrato) => contrato.id !== id));
       })
       .catch((error) => {
         console.error(error);
@@ -40,27 +94,30 @@ export default function ListaContrato() {
     setSearchQuery(e.target.value);
   };
 
-  const filteredcontratos = contratos.filter((contrato) =>
-    contrato.nome.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredContratos = contratos.filter((contrato) =>
+    contrato.duracao.toString().includes(searchQuery.toLowerCase())
   );
-  
 
   return (
     <div className="container">
-    <div className="col-12">
-      <h1>Lista de Contratos</h1>
-      <div className="d-flex mb-3">
-        <Link to="/CadastroContrato" className="btn btn-dark me-auto p-2">Adicionar</Link>    
-        <FormControl
-          type="text"
-          className="search-input"
-          placeholder='Pesquisar por nome'
-          value={searchQuery}
-          onChange={handleSearch}
-        />
-        <span class="p-2 me-2"><FontAwesomeIcon icon={faMagnifyingGlass} size='xl' /></span>
+      <div className="col-12">
+        <h1>Lista de Contratos</h1>
+        <div className="d-flex mb-3">
+          <Link to="/CadastroContrato" className="btn btn-dark me-auto p-2">
+            Adicionar
+          </Link>
+          <FormControl
+            type="text"
+            className="search-input"
+            placeholder="Pesquisar por duração"
+            value={searchQuery}
+            onChange={handleSearch}
+          />
+          <span className="p-2 me-2">
+            <FontAwesomeIcon icon={faSearch} size="xl" />
+          </span>
+        </div>
       </div>
-    </div>
 
       <table className="table table-striped">
         <thead>
@@ -68,29 +125,36 @@ export default function ListaContrato() {
             <th scope="col">#</th>
             <th scope="col">Duração</th>
             <th scope="col">Valor</th>
-            <th scope="col">Data inicio</th>
+            <th scope="col">Data de Início</th>
             <th scope="col">Condições Específicas</th>
             <th scope="col">Inquilino</th>
-            <th scope="col">Imovel</th>
+            <th scope="col">Endereço</th>
             <th scope="col">Imobiliária</th>
+            <th scope="col">Ações</th>
           </tr>
         </thead>
         <tbody>
-          {filteredcontratos.map((contrato) => (
+          {filteredContratos.map((contrato) => (
             <tr key={contrato.id}>
               <th scope="row">{contrato.id}</th>
               <td>{contrato.duracao}</td>
               <td>{contrato.valor}</td>
-              <td>{contrato.dataInicio}</td>
-              <td>{contrato.telcondicoesEspecificasefone}</td>
-              <td>{contrato.inquilinoId}</td>
-              <td>{contrato.imovelId}</td>
-              <td>{contrato.imobiliariaId}</td>
+              <td>{new Date(contrato.dataInicio).toLocaleDateString()}</td>
+              <td>{contrato.condicoesEspecificas}</td>
+              <td>{inquilinos[contrato.inquilinoId]}</td>
+              <td>{imoveis[contrato.imovelId]?.endereco}</td>
+              <td>{imobiliarias[contrato.imobiliariaId]}</td>
               <td>
-                <Link to={`/EditarContrato/${contrato.id}`} className="btn btn-sm btn-primary me-2">
+                <Link
+                  to={`/EditarContrato/${contrato.id}`}
+                  className="btn btn-sm btn-primary me-2"
+                >
                   <FontAwesomeIcon icon={faEdit} />
                 </Link>
-                <button className="btn btn-sm btn-danger" onClick={() => handleDelete(contrato.id)}>
+                <button
+                  className="btn btn-sm btn-danger"
+                  onClick={() => handleDelete(contrato.id)}
+                >
                   <FontAwesomeIcon icon={faTrash} />
                 </button>
               </td>

@@ -17,6 +17,7 @@ export default function CadastroContrato() {
   const [successMsg, setSuccessMsg] = useState("");
   const [inquilinos, setInquilinos] = useState([]);
   const [imoveis, setImoveis] = useState([]);
+  const [imobiliarias, setImobiliaria] = useState([]);
 
   const handleChange = (e) => {
     setFormData((prevFormData) => ({
@@ -74,6 +75,14 @@ export default function CadastroContrato() {
       .get("http://localhost:3000/imovel")
       .then((response) => {
         setImoveis(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    axios
+      .get("http://localhost:3000/imobiliaria")
+      .then((response) => {
+        setImobiliaria(response.data);
       })
       .catch((error) => {
         console.error(error);
@@ -178,6 +187,26 @@ export default function CadastroContrato() {
             {imoveis.map((imovel) => (
               <option key={imovel.id} value={imovel.id}>
                 {imovel.descricao}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="col-md-6">
+          <label htmlFor="imobiliariaId" className="form-label">
+            Imobiliária
+          </label>
+          <select
+            className="form-control"
+            id="imobiliariaId"
+            name="imobiliariaId"
+            value={formData.imobiliariaId}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Selecione a Imobiliária</option>
+            {imobiliarias.map((imobiliaria) => (
+              <option key={imobiliaria.id} value={imobiliaria.id}>
+                {imobiliaria.nome}
               </option>
             ))}
           </select>

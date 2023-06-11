@@ -9,7 +9,7 @@ export default function CustomNavbar() {
       <BootstrapNavbar.Toggle aria-controls="navbarNav" />
       <BootstrapNavbar.Collapse id="navbarNav">
         <Nav className="mr-auto">
-          <Nav.Link as={Link} to="/">
+          <Nav.Link as={Link} to="/ListaVisita">
             Visitas
           </Nav.Link>
           <Nav.Link as={Link} to="/ListaProprietario">
@@ -35,7 +35,7 @@ export default function CustomNavbar() {
           </Nav.Link>
         </Nav>
         <Nav className="navbar-nav ms-auto">
-          <Nav.Link as="a" href="#" className="nav-link ml-auto">
+          <Nav.Link as="a" href="/" className="nav-link ml-auto">
             Sair
           </Nav.Link>
         </Nav>

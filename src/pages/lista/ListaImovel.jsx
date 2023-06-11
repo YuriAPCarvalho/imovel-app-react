@@ -94,7 +94,7 @@ export default function ListaImovel() {
             value={searchQuery}
             onChange={handleSearch}
           />
-          <span class="p-2 me-2">
+          <span className="p-2 me-2">
             <FontAwesomeIcon icon={faMagnifyingGlass} size="xl" />
           </span>
         </div>

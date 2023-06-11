@@ -1,3 +1,4 @@
+/*
 import Navbar from "./components/navbar";
 import "@fortawesome/fontawesome-free/css/all.css";
 import { Routes, Route } from "react-router-dom";
@@ -72,5 +73,20 @@ function App() {
     </>
   );
 }
+
+export default App;
+*/
+
+import React from "react";
+import RoutesApp from "./routes";
+import { AuthProvider } from "./contexts/auth";
+import GlobalStyle from "./styles/global";
+
+const App = () => (
+  <AuthProvider>
+    <RoutesApp />
+    <GlobalStyle />
+  </AuthProvider>
+);
 
 export default App;

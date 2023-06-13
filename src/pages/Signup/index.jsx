@@ -35,8 +35,8 @@ const Signup = () => {
 
   return (
     <C.Container>
-      <C.Label>SISTEMA DE LOGIN</C.Label>
       <C.Content>
+        <C.Label>SISTEMA DE LOGIN</C.Label>
         <Input
           type="text"
           placeholder="Digite seu nome"

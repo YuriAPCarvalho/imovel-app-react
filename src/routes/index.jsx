@@ -42,12 +42,13 @@ import CadastroAvaliacao from "../pages/cadastro/CadastroAvaliacao";
 const Private = ({ Item }) => {
   const { signed } = useAuth();
 
-  return signed > 0 ? <Item /> : <Navigate to="/signin" />;
+  return signed > 0 ? <Item /> : <Navigate to="/" />;
 };
 
 const AppContent = () => {
   const location = useLocation();
-  const isLoginPage = location.pathname === "/";
+  const isLoginPage =
+    location.pathname === "/" || location.pathname === "/signup";
 
   return (
     <Fragment>

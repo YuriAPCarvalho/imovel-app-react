@@ -1,6 +1,8 @@
 import styled from "styled-components";
+import backgroundImage from "../../img/image.png";
 
 export const Container = styled.div`
+  background: url(${backgroundImage}) center/cover no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;

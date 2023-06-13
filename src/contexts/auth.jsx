@@ -1,6 +1,11 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, useContext } from "react";
 
 export const AuthContext = createContext({});
+
+export const useAuth = () => {
+  const { user, signed, signin, signup, signout } = useContext(AuthContext);
+  return { user, signed, signin, signup, signout };
+};
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState();
@@ -49,12 +54,14 @@ export const AuthProvider = ({ children }) => {
         const token = data.token;
         localStorage.setItem("user_token", JSON.stringify({ email, token }));
         setUser(data.usuario);
+        return null; // Retorna null em caso de sucesso
       } else {
         throw new Error("Falha ao fazer login");
       }
     } catch (error) {
       console.error(error);
       // Lógica para tratamento de erro ao fazer login
+      return "Usuário ou senha incorreto"; // Retorna uma mensagem de erro
     }
   };
 

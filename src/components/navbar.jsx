@@ -1,8 +1,10 @@
 import { Navbar as BootstrapNavbar, Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
+import { useAuth } from "../contexts/auth";
 
 export default function CustomNavbar() {
+  const { signout } = useAuth();
   return (
     <BootstrapNavbar bg="dark" variant="dark" expand="lg" fixed="top">
       <BootstrapNavbar.Brand>Imobiliária</BootstrapNavbar.Brand>
@@ -38,7 +40,7 @@ export default function CustomNavbar() {
           <Nav.Link
             as="a"
             href="/"
-            onClick={() => [signout(), navigate("/")]}
+            onClick={() => signout()}
             className="nav-link ml-auto"
           >
             Sair

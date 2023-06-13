@@ -37,7 +37,9 @@ import EditarManutencao from "../pages/editar/EditarManutencao";
 
 import ListaVisita from "../pages/lista/ListaVisita";
 import CadastroVisita from "../pages/cadastro/CadastroVisita";
+
 import CadastroAvaliacao from "../pages/cadastro/CadastroAvaliacao";
+import ListaAvaliacao from "../pages/lista/ListaAvaliacao";
 
 const Private = ({ Item }) => {
   const { signed } = useAuth();
@@ -160,6 +162,11 @@ const AppContent = () => {
           exact
           path="/CadastroAvaliacao"
           element={<Private Item={CadastroAvaliacao} />}
+        />
+        <Route
+          exact
+          path="/ListaAvaliacao"
+          element={<Private Item={ListaAvaliacao} />}
         />
       </Routes>
     </Fragment>

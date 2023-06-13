@@ -5,13 +5,56 @@ import queryString from "query-string";
 
 export default function CadastroAvaliacao() {
   const [formData, setFormData] = useState({
-    imovel: "",
+    imovelId: "",
     avaliacao: "",
     satisfacao: "",
   });
 
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
+  const [imoveis, setImoveis] = useState([]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name === "imovelId") {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: value === "" ? null : parseInt(value),
+      }));
+    } else {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: value,
+      }));
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    setErrorMsg("");
+    setSuccessMsg("");
+
+    axios
+      .post("http://localhost:3000/avaliacao", formData)
+      .then((response) => {
+        setSuccessMsg("Avaliação cadastrada com sucesso!");
+        setFormData({
+          imovelId: "",
+          avaliacao: "",
+          satisfacao: "",
+        });
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 409) {
+          setErrorMsg(error.response.data.message);
+        } else {
+          setErrorMsg(error.response.data.message);
+          console.error(error);
+        }
+      });
+  };
 
   useEffect(() => {
     const parsed = queryString.parse(window.location.search);
@@ -20,34 +63,31 @@ export default function CadastroAvaliacao() {
     if (imovelId) {
       fetchImovel(imovelId);
     }
-  }, []);
 
-  const fetchImovel = async (imovelId) => {
-    try {
-      const response = await axios.get(
-        `http://localhost:3000/imovel/${imovelId}`
-      );
-      const imovel = response.data;
-      setFormData((prevData) => ({
-        ...prevData,
-        imovel: imovel.endereco,
-      }));
-    } catch (error) {
-      console.error(error);
+    async function fetchImovel(imovelId) {
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/imovel/${imovelId}`
+        );
+        const imovel = response.data;
+        setFormData((prevData) => ({
+          ...prevData,
+          imovelId: imovel.id,
+        }));
+      } catch (error) {
+        console.error(error);
+      }
     }
-  };
 
-  const handleChange = (e) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [e.target.name]: e.target.value,
-    }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Lógica para enviar os dados para a API e tratar a resposta
-  };
+    axios
+      .get("http://localhost:3000/imovel")
+      .then((response) => {
+        setImoveis(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
   return (
     <div className="container">
@@ -56,26 +96,30 @@ export default function CadastroAvaliacao() {
       <h1>Cadastro de Avaliação</h1>
       <form className="row g-3" onSubmit={handleSubmit}>
         <div className="col-md-6">
-          <label htmlFor="imovel" className="form-label">
+          <label htmlFor="imovelId" className="form-label">
             Imóvel
           </label>
-          <input
-            type="text"
+          <select
             className="form-control"
-            id="imovel"
-            name="imovel"
-            value={formData.imovel}
+            id="imovelid"
+            name="imovelId"
+            value={formData.imovelId}
             onChange={handleChange}
             required
-            readOnly // Impede a edição do campo
-          />
+            disabled
+          >
+            {imoveis.map((imovel) => (
+              <option key={imovel.id} value={imovel.id}>
+                {imovel.endereco}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="col-md-12">
           <label htmlFor="avaliacao" className="form-label">
             Avaliação
           </label>
           <textarea
-            type="text"
             className="form-control"
             id="avaliacao"
             name="avaliacao"
@@ -94,12 +138,12 @@ export default function CadastroAvaliacao() {
             required
           >
             <option value="">Satisfação</option>
-            <option value="1">Excelente</option>
-            <option value="2">Ótimo</option>
-            <option value="3">Bom</option>
-            <option value="4">Regular</option>
-            <option value="5">Ruim</option>
-            <option value="6">Péssimo</option>
+            <option value="Excelente">Excelente</option>
+            <option value="Otimo">Ótimo</option>
+            <option value="Bom">Bom</option>
+            <option value="Regular">Regular</option>
+            <option value="Ruim">Ruim</option>
+            <option value="Pessimo">Péssimo</option>
           </select>
         </div>
         <div className="col-12">

@@ -4,7 +4,7 @@ import {
   Route,
   Routes,
   useLocation,
-  Navigate,
+  useNavigate,
 } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import Signin from "../pages/Signin";
@@ -41,10 +41,14 @@ import CadastroVisita from "../pages/cadastro/CadastroVisita";
 import CadastroAvaliacao from "../pages/cadastro/CadastroAvaliacao";
 import ListaAvaliacao from "../pages/lista/ListaAvaliacao";
 
+import ListaUsuario from "../pages/lista/ListaUsuario";
+import CadastroUsuario from "../pages/cadastro/CadastroUsuario";
+
 const Private = ({ Item }) => {
   const { signed } = useAuth();
+  const navigate = useNavigate();
 
-  return signed > 0 ? <Item /> : <Navigate to="/" />;
+  return signed > 0 ? <Item /> : navigate("/");
 };
 
 const AppContent = () => {
@@ -167,6 +171,16 @@ const AppContent = () => {
           exact
           path="/ListaAvaliacao"
           element={<Private Item={ListaAvaliacao} />}
+        />
+        <Route
+          exact
+          path="/ListaUsuario"
+          element={<Private Item={ListaUsuario} />}
+        />{" "}
+        <Route
+          exact
+          path="/CadastroUsuario"
+          element={<Private Item={CadastroUsuario} />}
         />
       </Routes>
     </Fragment>

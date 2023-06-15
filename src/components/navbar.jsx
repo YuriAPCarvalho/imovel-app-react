@@ -37,6 +37,9 @@ export default function CustomNavbar() {
           </Nav.Link>
         </Nav>
         <Nav className="navbar-nav ms-auto">
+          <Nav.Link as={Link} to="/ListaUsuario">
+            Usuários
+          </Nav.Link>
           <Nav.Link
             as="a"
             href="/"

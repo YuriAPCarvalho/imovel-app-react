@@ -13,57 +13,55 @@ import "@fortawesome/fontawesome-free/css/all.css";
 import "./../../style.css";
 
 export default function ListaAvaliacao() {
-  const [avaliacao, setAvaliacao] = useState([]);
+  const [avaliacoes, setAvaliacao] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [imoveis, setImoveis] = useState([]);
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/proprietario")
+      .get("http://localhost:3000/avaliacao")
       .then((response) => {
-        const sortedProprietarios = response.data.sort((a, b) => a.id - b.id);
-        setProprietarios(sortedProprietarios);
-        setProprietarios(response.data);
+        const listaAvalicao = response.data.sort((a, b) => a.id - b.id);
+        setAvaliacao(listaAvalicao);
+        setAvaliacao(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+    axios
+      .get("http://localhost:3000/imovel")
+      .then((response) => {
+        setImoveis(response.data);
       })
       .catch((error) => {
         console.error(error);
       });
   }, []);
-
   library.add(faEdit, faTrash);
-
-  const handleDelete = (id) => {
-    axios
-      .delete(`http://localhost:3000/proprietario/${id}`)
-      .then(() => {
-        setProprietarios(
-          proprietarios.filter((proprietario) => proprietario.id !== id)
-        );
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
   };
 
-  const filteredProprietarios = proprietarios.filter((proprietario) =>
-    proprietario.nome.toLowerCase().includes(searchQuery.toLowerCase())
+  const getImovelEndereco = (imovelId) => {
+    const imovel = imoveis.find((i) => i.id === imovelId);
+    return imovel ? imovel.endereco : "";
+  };
+
+  const filteredAvaliacao = avaliacoes.filter((avaliacao) =>
+    avaliacao.satisfacao.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
     <div className="container">
       <div className="col-12">
-        <h1>Lista de Proprietários</h1>
-        <div className="d-flex mb-3">
-          <Link to="/CadastroProprietario" className="btn btn-dark me-auto p-2">
-            Adicionar
-          </Link>
+        <h1>Lista de Avaliações</h1>
+        <div className="d-flex mb-3 flex justify-content-end">
           <FormControl
             type="text"
             className="search-input"
-            placeholder="Pesquisar por nome"
+            placeholder="Pesquisar por satisfação"
             value={searchQuery}
             onChange={handleSearch}
           />
@@ -83,27 +81,12 @@ export default function ListaAvaliacao() {
           </tr>
         </thead>
         <tbody>
-          {filteredProprietarios.map((proprietario) => (
-            <tr key={proprietario.id}>
-              <th scope="row">{proprietario.id}</th>
-              <td>{proprietario.nome}</td>
-              <td>{proprietario.cpf}</td>
-              <td>{proprietario.email}</td>
-              <td>{proprietario.telefone}</td>
-              <td>
-                <Link
-                  to={`/EditarProprietario/${proprietario.id}`}
-                  className="btn btn-sm btn-primary me-2"
-                >
-                  <FontAwesomeIcon icon={faEdit} />
-                </Link>
-                <button
-                  className="btn btn-sm btn-danger"
-                  onClick={() => handleDelete(proprietario.id)}
-                >
-                  <FontAwesomeIcon icon={faTrash} />
-                </button>
-              </td>
+          {filteredAvaliacao.map((avaliacao) => (
+            <tr key={avaliacao.id}>
+              <th scope="row">{avaliacao.id}</th>
+              <td>{getImovelEndereco(avaliacao.imovelId)}</td>
+              <td>{avaliacao.satisfacao}</td>
+              <td>{avaliacao.avaliacao}</td>
             </tr>
           ))}
         </tbody>

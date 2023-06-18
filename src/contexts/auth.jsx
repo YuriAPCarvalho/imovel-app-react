@@ -8,7 +8,10 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState();
+  const [user, setUser] = useState(() => {
+    const storedUser = localStorage.getItem("user_token");
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
 
   useEffect(() => {
     const fetchData = async () => {

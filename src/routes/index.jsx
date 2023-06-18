@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 import {
   BrowserRouter,
   Route,
@@ -43,12 +43,23 @@ import ListaAvaliacao from "../pages/lista/ListaAvaliacao";
 
 import ListaUsuario from "../pages/lista/ListaUsuario";
 import CadastroUsuario from "../pages/cadastro/CadastroUsuario";
+import EditarUsuario from "../pages/editar/EditarUsuario";
+
+import ListaPerfil from "../pages/lista/ListaPerfil";
+import CadastroPerfil from "../pages/cadastro/CadastroPerfil";
+import EditarPerfil from "../pages/editar/EditarPerfil";
 
 const Private = ({ Item }) => {
   const { signed } = useAuth();
   const navigate = useNavigate();
 
-  return signed > 0 ? <Item /> : navigate("/");
+  useEffect(() => {
+    if (signed <= 0) {
+      navigate("/");
+    }
+  }, [signed, navigate]);
+
+  return signed > 0 ? <Item /> : null;
 };
 
 const AppContent = () => {
@@ -181,6 +192,26 @@ const AppContent = () => {
           exact
           path="/CadastroUsuario"
           element={<Private Item={CadastroUsuario} />}
+        />
+        <Route
+          exact
+          path="/EditarUsuario/:id"
+          element={<Private Item={EditarUsuario} />}
+        />
+        <Route
+          exact
+          path="/ListaPerfil"
+          element={<Private Item={ListaPerfil} />}
+        />
+        <Route
+          exact
+          path="/CadastroPerfil"
+          element={<Private Item={CadastroPerfil} />}
+        />
+        <Route
+          exact
+          path="/EditarPerfil/:id"
+          element={<Private Item={EditarPerfil} />}
         />
       </Routes>
     </Fragment>

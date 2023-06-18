@@ -40,6 +40,9 @@ export default function CustomNavbar() {
           <Nav.Link as={Link} to="/ListaUsuario">
             Usuários
           </Nav.Link>
+          <Nav.Link as={Link} to="/ListaPerfil">
+            Perfil
+          </Nav.Link>
           <Nav.Link
             as="a"
             href="/"

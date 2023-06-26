@@ -3,8 +3,9 @@ import { createContext, useEffect, useState, useContext } from "react";
 export const AuthContext = createContext({});
 
 export const useAuth = () => {
-  const { user, signed, signin, signup, signout } = useContext(AuthContext);
-  return { user, signed, signin, signup, signout };
+  const { user, perfil, signed, signin, signup, signout } =
+    useContext(AuthContext);
+  return { user, perfil, signed, signin, signup, signout };
 };
 
 export const AuthProvider = ({ children }) => {
@@ -12,35 +13,30 @@ export const AuthProvider = ({ children }) => {
     const storedUser = localStorage.getItem("user_token");
     return storedUser ? JSON.parse(storedUser) : null;
   });
+  const [perfil, setPerfil] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: "admin@gmail.com",
-            senha: "admin",
-          }),
-        });
+    if (user && user.id) {
+      const fetchData = async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:3000/permissao/${user.id}`
+          );
 
-        if (response.ok) {
-          const data = await response.json();
-          setUser(data.usuario);
-        } else {
-          throw new Error("Falha ao obter os dados do usuário");
+          if (response.ok) {
+            const data = await response.json();
+            setPerfil(data);
+          } else {
+            throw new Error("Falha ao obter as permissões do usuário");
+          }
+        } catch (error) {
+          console.error(error);
         }
-      } catch (error) {
-        console.error(error);
-        // Lógica para tratamento de erro ao obter os dados do usuário
-      }
-    };
+      };
 
-    fetchData();
-  }, []);
+      fetchData();
+    }
+  }, [user]);
 
   const signin = async (email, password) => {
     try {
@@ -57,14 +53,14 @@ export const AuthProvider = ({ children }) => {
         const token = data.token;
         localStorage.setItem("user_token", JSON.stringify({ email, token }));
         setUser(data.usuario);
-        return null; // Retorna null em caso de sucesso
+        return null;
       } else {
         throw new Error("Falha ao fazer login");
       }
     } catch (error) {
       console.error(error);
-      // Lógica para tratamento de erro ao fazer login
-      return "Usuário ou senha incorreto"; // Retorna uma mensagem de erro
+
+      return "Usuário ou senha incorreto";
     }
   };
 
@@ -88,7 +84,6 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error(error);
-      // Lógica para tratamento de erro ao cadastrar o usuário
     }
   };
 
@@ -99,7 +94,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, signed: !!user, signin, signup, signout }}
+      value={{ user, perfil, signed: !!user, signin, signup, signout }}
     >
       {children}
     </AuthContext.Provider>

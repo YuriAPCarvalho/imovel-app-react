@@ -1,35 +1,54 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
+import moment from "moment";
 
 export default function EditarImovel() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [proprietario, setProprietario] = useState({
-    nome: '',
-    cpf: '',
-    email: '',
-    telefone: '',
+  const [manutencao, setManutencao] = useState({
+    descricao: "",
+    valor: "",
+    data: "",
+    imovelId: "",
+    imobiliariaId: "",
   });
+  const [imoveis, setImoveis] = useState([]);
+  const [imobiliarias, setImobiliarias] = useState([]);
 
   useEffect(() => {
     if (id) {
-      // Requisição GET para obter os dados do proprietário pelo ID
-      axios.get(`http://localhost:3000/proprietario/${id}`)
+      axios
+        .get(`http://localhost:3000/manutencao/${id}`)
         .then((response) => {
-          setProprietario(response.data);
+          setManutencao(response.data);
         })
         .catch((error) => {
           console.error(error);
         });
     }
+    axios
+      .get("http://localhost:3000/imovel")
+      .then((response) => {
+        setImoveis(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    axios
+      .get("http://localhost:3000/imobiliaria")
+      .then((response) => {
+        setImobiliarias(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }, [id]);
 
   const handleChange = (e) => {
-    setProprietario({
-      ...proprietario,
+    setManutencao({
+      ...manutencao,
       [e.target.name]: e.target.value,
     });
   };
@@ -37,22 +56,29 @@ export default function EditarImovel() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // Converter a data para o formato esperado pela API
+    const dataConvertida = moment(manutencao.data).toISOString();
+
+    // Atualizar o objeto "manutencao" com a data convertida
+    const manutencaoAtualizada = {
+      ...manutencao,
+      data: dataConvertida,
+    };
+
     if (id) {
-      // Requisição PUT para atualizar os dados do proprietário
-      axios.put(`http://localhost:3000/proprietario/${id}`, proprietario)
+      axios
+        .put(`http://localhost:3000/manutencao/${id}`, manutencaoAtualizada)
         .then((response) => {
-          // Redirecionar para a lista de proprietários após a edição bem-sucedida
-          navigate('/ListaProprietario');
+          navigate("/ListaManutencao");
         })
         .catch((error) => {
           console.error(error);
         });
     } else {
-      // Requisição POST para adicionar um novo proprietário
-      axios.post('http://localhost:3000/proprietario', proprietario)
+      axios
+        .post("http://localhost:3000/manutencao", manutencaoAtualizada)
         .then((response) => {
-          // Redirecionar para a lista de proprietários após a adição bem-sucedida
-          navigate('/ListaProprietario');
+          navigate("/ListaManutencao");
         })
         .catch((error) => {
           console.error(error);
@@ -60,61 +86,104 @@ export default function EditarImovel() {
     }
   };
 
+  const dataFormatada =
+    manutencao.data && moment(manutencao.data).isValid()
+      ? moment(manutencao.data).format("YYYY-MM-DD")
+      : "";
+
   return (
     <div className="container">
-      <h1>{id ? 'Editar Proprietário' : 'Adicionar Proprietário'}</h1>
+      <h1>{id ? "Editar Manutenção" : "Adicionar Manutenção"}</h1>
       <form className="row g-3" onSubmit={handleSubmit}>
-       <div className="col-md-6">
-          <label htmlFor="nome" className="form-label">Nome</label>
+        <div className="col-md-6">
+          <label htmlFor="descricao" className="form-label">
+            Descrição
+          </label>
           <input
             type="text"
             className="form-control"
-            id="nome"
-            name="nome"
-            value={proprietario.nome}
+            id="descricao"
+            name="descricao"
+            value={manutencao.descricao}
             onChange={handleChange}
             required
           />
         </div>
         <div className="col-md-6">
-          <label htmlFor="cpf" className="form-label">CPF</label>
+          <label htmlFor="valor" className="form-label">
+            Valor em R$
+          </label>
           <input
-            type="text"
+            type="number"
             className="form-control"
-            id="cpf"
-            name="cpf"
-            value={proprietario.cpf}
+            id="valor"
+            name="valor"
+            value={manutencao.valor}
             onChange={handleChange}
             required
           />
         </div>
         <div className="col-md-6">
-          <label htmlFor="email" className="form-label">Email</label>
+          <label htmlFor="data" className="form-label">
+            Data
+          </label>
           <input
-            type="email"
+            type="date"
             className="form-control"
-            id="email"
-            name="email"
-            value={proprietario.email}
+            id="data"
+            name="data"
+            value={dataFormatada}
             onChange={handleChange}
             required
           />
         </div>
         <div className="col-md-6">
-          <label htmlFor="telefone" className="form-label">Telefone</label>
-          <input
-            type="tel"
-            className="form-control"
-            id="telefone"
-            name="telefone"
-            value={proprietario.telefone}
+          <label htmlFor="imovel" className="form-label">
+            Imóvel
+          </label>
+          <select
+            className="form-select"
+            id="imovel"
+            name="imovelId"
+            value={manutencao.imovelId}
             onChange={handleChange}
             required
-          />
+          >
+            <option value="">Selecione um imóvel</option>
+            {imoveis.map((prop) => (
+              <option key={prop.id} value={prop.id}>
+                {prop.endereco}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="col-md-6">
+          <label htmlFor="imobiliaria" className="form-label">
+            Imobiliária
+          </label>
+          <select
+            className="form-select"
+            id="imobiliaria"
+            name="imobiliariaId"
+            value={manutencao.imobiliariaId}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Selecione uma imobiliária</option>
+            {imobiliarias.map((prop) => (
+              <option key={prop.id} value={prop.id}>
+                {prop.nome}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="col-12">
-        <button type="submit" className="btn btn-dark me-2">{id ? 'Salvar' : 'Adicionar'}</button>
-        <Link to="/ListaProprietario" className="btn btn-dark">Voltar</Link>
+          <button type="submit" className="btn btn-dark me-2">
+            {id ? "Salvar" : "Adicionar"}
+          </button>
+          <Link to="/ListaManutencao" className="btn btn-dark">
+            Voltar
+          </Link>
         </div>
       </form>
     </div>

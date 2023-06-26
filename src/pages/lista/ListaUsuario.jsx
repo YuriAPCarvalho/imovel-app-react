@@ -15,6 +15,7 @@ import "./../../style.css";
 export default function ListaUsuario() {
   const [usuarios, setUsuarios] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
     axios
@@ -32,13 +33,15 @@ export default function ListaUsuario() {
   library.add(faEdit, faTrash);
 
   const handleDelete = (id) => {
+    setErrorMsg("");
+
     axios
       .delete(`http://localhost:3000/usuario/${id}`)
       .then(() => {
         setUsuarios(usuarios.filter((usuario) => usuario.id !== id));
       })
       .catch((error) => {
-        console.error(error);
+        setErrorMsg(error.response.data.message);
       });
   };
 
@@ -52,6 +55,7 @@ export default function ListaUsuario() {
 
   return (
     <div className="container">
+      {errorMsg && <div className="alert alert-danger">{errorMsg}</div>}
       <div className="col-12">
         <h1>Lista de Usuários</h1>
         <div className="d-flex mb-3">

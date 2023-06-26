@@ -12,14 +12,23 @@ export default function EditarUsuario() {
     perfil: "",
     senha: "",
   });
+  const [permissoes, setPermissoes] = useState([]);
 
   useEffect(() => {
     if (id) {
-      // Requisição GET para obter os dados do proprietário pelo ID
       axios
         .get(`http://localhost:3000/usuario/${id}`)
         .then((response) => {
           setUsuario(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+
+      axios
+        .get("http://localhost:3000/permissao")
+        .then((response) => {
+          setPermissoes(response.data);
         })
         .catch((error) => {
           console.error(error);
@@ -38,28 +47,31 @@ export default function EditarUsuario() {
     e.preventDefault();
 
     if (id) {
-      // Requisição PUT para atualizar os dados do proprietário
       axios
         .put(`http://localhost:3000/usuario/${id}`, usuario)
         .then((response) => {
-          // Redirecionar para a lista de proprietários após a edição bem-sucedida
           navigate("/ListaUsuario");
         })
         .catch((error) => {
           console.error(error);
         });
     } else {
-      // Requisição POST para adicionar um novo proprietário
       axios
         .post("http://localhost:3000/usuario", usuario)
         .then((response) => {
-          // Redirecionar para a lista de proprietários após a adição bem-sucedida
           navigate("/ListaUsuario");
         })
         .catch((error) => {
           console.error(error);
         });
     }
+  };
+
+  const isFieldDisabled = (fieldName) => {
+    if (id === "1") {
+      return true;
+    }
+    return false;
   };
 
   return (
@@ -77,6 +89,7 @@ export default function EditarUsuario() {
             name="nome"
             value={usuario.nome}
             onChange={handleChange}
+            disabled={isFieldDisabled("nome")}
             required
           />
         </div>
@@ -91,6 +104,7 @@ export default function EditarUsuario() {
             name="email"
             value={usuario.email}
             onChange={handleChange}
+            disabled={isFieldDisabled("email")}
             required
           />
         </div>
@@ -104,12 +118,14 @@ export default function EditarUsuario() {
             name="perfil"
             value={usuario.perfil}
             onChange={handleChange}
+            disabled={isFieldDisabled("perfil")}
             required
           >
-            <option value=""></option>
-            <option value="cliente">Cliente</option>
-            <option value="operador">Operador</option>
-            <option value="administrador">Administrador</option>
+            {permissoes.map((permissao) => (
+              <option key={permissao.id} value={permissao.nome}>
+                {permissao.nome}
+              </option>
+            ))}
           </select>
         </div>
         <div className="col-md-6">
@@ -123,6 +139,7 @@ export default function EditarUsuario() {
             name="senha"
             value={usuario.senha}
             onChange={handleChange}
+            disabled={isFieldDisabled("senha")}
             required
           />
         </div>

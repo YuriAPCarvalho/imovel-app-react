@@ -74,6 +74,14 @@ export default function ListaManutencao() {
     manutencao.descricao?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const formatarData = (data) => {
+    const date = new Date(data);
+    const dia = date.getDate().toString().padStart(2, "0");
+    const mes = (date.getMonth() + 1).toString().padStart(2, "0");
+    const ano = date.getFullYear();
+    return `${dia}/${mes}/${ano}`;
+  };
+
   return (
     <div className="container">
       <div className="col-12">
@@ -100,6 +108,7 @@ export default function ListaManutencao() {
           <tr>
             <th scope="col">#</th>
             <th scope="col">Endereço</th>
+            <th scope="col">Data</th>
             <th scope="col">Imobiliária</th>
             <th scope="col">Valor</th>
             <th scope="col">Descrição</th>
@@ -111,6 +120,7 @@ export default function ListaManutencao() {
             <tr key={manutencao.id}>
               <th scope="row">{manutencao.id}</th>
               <td>{getImovelEndereco(manutencao.imovelId)}</td>
+              <td>{formatarData(manutencao.data)}</td>
               <td>{getImobiliariaNome(manutencao.imobiliariaId)}</td>
               <td>{manutencao.valor}</td>
               <td>{manutencao.descricao}</td>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
@@ -12,6 +12,7 @@ export default function CadastroUsuario() {
 
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
+  const [permissoes, setPermissao] = useState([]);
 
   const handleChange = (e) => {
     setFormData((prevFormData) => ({
@@ -51,6 +52,17 @@ export default function CadastroUsuario() {
         }
       });
   };
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/permissao")
+      .then((response) => {
+        setPermissao(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
   return (
     <div className="container">
@@ -113,9 +125,11 @@ export default function CadastroUsuario() {
             required
           >
             <option value=""></option>
-            <option value="cliente">Cliente</option>
-            <option value="operador">Operador</option>
-            <option value="administrador">Administrador</option>
+            {permissoes.map((permissao) => (
+              <option key={permissao.id} value={permissao.nome}>
+                {permissao.nome}
+              </option>
+            ))}
           </select>
         </div>
         <div className="col-12">

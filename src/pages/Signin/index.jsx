@@ -4,6 +4,8 @@ import Button from "../../components/Button";
 import * as C from "./styles";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
+import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+import jwt_decode from "jwt-decode";
 
 const Signin = () => {
   const { signin } = useAuth();
@@ -56,6 +58,18 @@ const Signin = () => {
         />
         <C.labelError>{error}</C.labelError>
         <Button Text="Entrar" onClick={handleLogin} />
+        <GoogleOAuthProvider clientId="790835500681-6c603dvrqn5rqpeqg6biajrv9udf6s2h.apps.googleusercontent.com">
+          <GoogleLogin
+            onSuccess={(credentialResponse) => {
+              var decoded = jwt_decode(credentialResponse.credential);
+              console.log(decoded);
+            }}
+            onError={() => {
+              console.log("Login Failed");
+            }}
+          />
+        </GoogleOAuthProvider>
+
         <C.LabelSignup>
           Não tem uma conta?
           <C.Strong>

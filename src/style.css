@@ -13,3 +13,12 @@
 .search-input {
   width: 200px;
 }
+
+.logo-image {
+  width: 320px;
+  height: 200px;
+}
+.titulo {
+  text-align: center;
+  padding-top: 10px;
+}

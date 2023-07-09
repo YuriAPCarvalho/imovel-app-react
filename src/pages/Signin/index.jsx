@@ -32,7 +32,16 @@ const Signin = () => {
   return (
     <C.Container>
       <C.Content>
-        <C.Label>GESTÃO DE ALUGUÉIS</C.Label>
+        <div>
+          <img
+            className="logo-image"
+            src="https://img.freepik.com/vetores-premium/ilustracao-de-assistencia-de-corretor-de-imoveis-com-homem_23-2148683208.jpg"
+            alt="Imagem de corretor de imóveis"
+          />
+          <div className="titulo">
+            <C.Label>GESTÃO DE ALUGUÉIS</C.Label>
+          </div>
+        </div>
         <Input
           type="email"
           placeholder="Digite seu E-mail"

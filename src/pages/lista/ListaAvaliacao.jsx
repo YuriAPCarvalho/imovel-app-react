@@ -11,11 +11,19 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FormControl } from "react-bootstrap";
 import "@fortawesome/fontawesome-free/css/all.css";
 import "./../../style.css";
+import { useAuth } from "../../contexts/auth";
 
 export default function ListaAvaliacao() {
   const [avaliacoes, setAvaliacao] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [imoveis, setImoveis] = useState([]);
+  const { user } = useAuth();
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+  };
 
   useEffect(() => {
     axios
@@ -30,7 +38,7 @@ export default function ListaAvaliacao() {
       });
 
     axios
-      .get("http://localhost:3000/imovel")
+      .get("http://localhost:3000/imovel", config)
       .then((response) => {
         setImoveis(response.data);
       })

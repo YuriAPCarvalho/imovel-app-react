@@ -11,15 +11,23 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FormControl } from "react-bootstrap";
 import "@fortawesome/fontawesome-free/css/all.css";
 import "./../../style.css";
+import { useAuth } from "../../contexts/auth";
 
 export default function ListaUsuario() {
   const [usuarios, setUsuarios] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+  const { user } = useAuth();
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+  };
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/usuario")
+      .get("http://localhost:3000/usuario", config)
       .then((response) => {
         const sortedUsuario = response.data.sort((a, b) => a.id - b.id);
         setUsuarios(sortedUsuario);

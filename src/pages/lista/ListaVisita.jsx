@@ -1,11 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../contexts/auth";
 
 export default function Home() {
   const [imoveis, setImoveis] = useState([]);
+  const { user } = useAuth();
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+  };
+
 
   useEffect(() => {
-    fetch("http://localhost:3000/imovel")
+    fetch("http://localhost:3000/imovel", config)
       .then((response) => response.json())
       .then((data) => setImoveis(data))
       .catch((error) => console.log(error));

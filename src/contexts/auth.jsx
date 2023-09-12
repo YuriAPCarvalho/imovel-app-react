@@ -9,23 +9,33 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
+  const [perfil, setPerfil] = useState(() => {
+    const storedProfile = localStorage.getItem("user_profile");
+    return storedProfile ? JSON.parse(storedProfile) : null;
+  });
+
   const [user, setUser] = useState(() => {
     const storedUser = localStorage.getItem("user_token");
     return storedUser ? JSON.parse(storedUser) : null;
   });
-  const [perfil, setPerfil] = useState(null);
 
   useEffect(() => {
-    if (user && user.id) {
+    if (user && user.token) {
       const fetchData = async () => {
         try {
           const response = await fetch(
-            `http://localhost:3000/permissao/${user.id}`
+            `http://localhost:3000/permissao/${user.id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${user.token}`,
+              },
+            }
           );
-
+  
           if (response.ok) {
             const data = await response.json();
             setPerfil(data);
+            localStorage.setItem("user_profile", JSON.stringify(data)); 
           } else {
             throw new Error("Falha ao obter as permissões do usuário");
           }
@@ -33,10 +43,12 @@ export const AuthProvider = ({ children }) => {
           console.error(error);
         }
       };
-
+  
       fetchData();
     }
   }, [user]);
+  
+  
 
   const signin = async (email, password) => {
     try {
@@ -50,8 +62,11 @@ export const AuthProvider = ({ children }) => {
 
       if (response.ok) {
         const data = await response.json();
-        const token = data.token;
-        localStorage.setItem("user_token", JSON.stringify({ email, token }));
+        const { perfil, id, token } = data.usuario;
+        localStorage.setItem(
+          "user_token",
+          JSON.stringify({ email, token, perfil, id })
+        );
         setUser(data.usuario);
         return null;
       } else {
@@ -76,8 +91,12 @@ export const AuthProvider = ({ children }) => {
 
       if (response.ok) {
         const data = await response.json();
-        const token = data.token;
-        localStorage.setItem("user_token", JSON.stringify({ email, token }));
+        const { token } = data;
+        const { perfil, id } = data.usuario;
+        localStorage.setItem(
+          "user_token",
+          JSON.stringify({ email, token, perfil, id })
+        );
         setUser(data.usuario);
       } else {
         throw new Error("Falha ao cadastrar o usuário");
@@ -89,7 +108,9 @@ export const AuthProvider = ({ children }) => {
 
   const signout = () => {
     setUser(null);
+    setPerfil(null);
     localStorage.removeItem("user_token");
+    localStorage.removeItem("user_profile");
   };
 
   return (

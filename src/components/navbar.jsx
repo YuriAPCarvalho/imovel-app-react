@@ -6,80 +6,24 @@ import { useAuth } from "../contexts/auth";
 export default function CustomNavbar() {
   const { user, perfil, signout } = useAuth();
 
-  console.log("Perfil do usuário:", user ? user.perfil : null);
-
   const renderDynamicNavLinks = () => {
     if (!user || !perfil) {
       return null;
     }
 
-    const {
-      visitas,
-      proprietarios,
-      imobiliarias,
-      imoveis,
-      inquilinos,
-      contratos,
-      manutencao,
-      avaliacao,
-      usuarios,
-      perfil: perfilEnabled,
-    } = perfil;
+    const allowedLinks = {
+      ADMINISTRADOR: ["Visita", "Proprietario", "Imobiliaria", "Imovel", "Inquilino", "Contrato", "Manutencao", "Avaliacao", "Usuario", "Perfil"],
+      CLIENTE: ["Visita", "Avaliacao"],
+      OPERADOR: ["Visita", "Proprietario", "Imobiliaria", "Imovel", "Inquilino", "Contrato", "Manutencao", "Avaliacao"]
+    };
 
-    return (
-      <>
-        {visitas && (
-          <Nav.Link as={Link} to="/ListaVisita">
-            Visitas
-          </Nav.Link>
-        )}
-        {proprietarios && (
-          <Nav.Link as={Link} to="/ListaProprietario">
-            Proprietários
-          </Nav.Link>
-        )}
-        {imobiliarias && (
-          <Nav.Link as={Link} to="/ListaImobiliaria">
-            Imobiliárias
-          </Nav.Link>
-        )}
-        {imoveis && (
-          <Nav.Link as={Link} to="/ListaImovel">
-            Imóveis
-          </Nav.Link>
-        )}
-        {inquilinos && (
-          <Nav.Link as={Link} to="/ListaInquilino">
-            Inquilínos
-          </Nav.Link>
-        )}
-        {contratos && (
-          <Nav.Link as={Link} to="/ListaContrato">
-            Contratos
-          </Nav.Link>
-        )}
-        {manutencao && (
-          <Nav.Link as={Link} to="/ListaManutencao">
-            Manutenção
-          </Nav.Link>
-        )}
-        {avaliacao && (
-          <Nav.Link as={Link} to="/ListaAvaliacao">
-            Avaliação
-          </Nav.Link>
-        )}
-        {usuarios && (
-          <Nav.Link as={Link} to="/ListaUsuario">
-            Usuários
-          </Nav.Link>
-        )}
-        {perfilEnabled && (
-          <Nav.Link as={Link} to="/ListaPerfil">
-            Perfil
-          </Nav.Link>
-        )}
-      </>
-    );
+    const allowedLinksForProfile = allowedLinks[user.perfil] || [];
+
+    return allowedLinksForProfile.map((link) => (
+      <Nav.Link as={Link} to={`/Lista${link}`} key={link}>
+        {link}
+      </Nav.Link>
+    ));
   };
 
   return (
@@ -102,3 +46,4 @@ export default function CustomNavbar() {
     </BootstrapNavbar>
   );
 }
+

@@ -9,7 +9,6 @@ import {
 import useAuth from "../hooks/useAuth";
 import Signin from "../pages/Signin";
 import Signup from "../pages/Signup";
-import NavBar from "../components/navbar";
 
 import ListaProprietario from "../pages/lista/ListaProprietario";
 import CadastroProprietario from "../pages/cadastro/CadastroProprietario";
@@ -48,6 +47,7 @@ import EditarUsuario from "../pages/editar/EditarUsuario";
 import ListaPerfil from "../pages/lista/ListaPerfil";
 import CadastroPerfil from "../pages/cadastro/CadastroPerfil";
 import EditarPerfil from "../pages/editar/EditarPerfil";
+import CustomNavbar from "../components/navbar";
 
 const Private = ({ Item }) => {
   const { signed } = useAuth();
@@ -69,7 +69,7 @@ const AppContent = () => {
 
   return (
     <Fragment>
-      {!isLoginPage && <NavBar />}
+      {!isLoginPage && <CustomNavbar />}
       <Routes>
         <Route path="/" element={<Signin />} />
         <Route exact path="/signup" element={<Signup />} />

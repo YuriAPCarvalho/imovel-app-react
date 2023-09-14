@@ -4,27 +4,31 @@ import "bootstrap/dist/css/bootstrap.css";
 import { useAuth } from "../contexts/auth";
 
 export default function CustomNavbar() {
-  const { user, perfil, signout } = useAuth();
+  const { user, signout } = useAuth();
 
   const renderDynamicNavLinks = () => {
-    if (!user || !perfil) {
+    if (!user.perfil) {
       return null;
     }
-
+  
     const allowedLinks = {
       ADMINISTRADOR: ["Visita", "Proprietario", "Imobiliaria", "Imovel", "Inquilino", "Contrato", "Manutencao", "Avaliacao", "Usuario", "Perfil"],
       CLIENTE: ["Visita", "Avaliacao"],
       OPERADOR: ["Visita", "Proprietario", "Imobiliaria", "Imovel", "Inquilino", "Contrato", "Manutencao", "Avaliacao"]
     };
-
+  
     const allowedLinksForProfile = allowedLinks[user.perfil] || [];
-
-    return allowedLinksForProfile.map((link) => (
+  
+    const dynamicNavLinks = allowedLinksForProfile.map((link) => (
       <Nav.Link as={Link} to={`/Lista${link}`} key={link}>
         {link}
       </Nav.Link>
     ));
+  
+  
+    return dynamicNavLinks;
   };
+  
 
   return (
     <BootstrapNavbar bg="dark" variant="dark" expand="lg" fixed="top">

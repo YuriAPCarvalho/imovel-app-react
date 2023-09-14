@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState, useContext } from "react";
+import { createContext,  useState, useContext, useEffect } from "react";
 
 export const AuthContext = createContext({});
 
@@ -19,34 +19,7 @@ export const AuthProvider = ({ children }) => {
     return storedUser ? JSON.parse(storedUser) : null;
   });
 
-  useEffect(() => {
-    if (user && user.token) {
-      const fetchData = async () => {
-        try {
-          const response = await fetch(
-            `http://localhost:3000/permissao/${user.id}`,
-            {
-              headers: {
-                Authorization: `Bearer ${user.token}`,
-              },
-            }
-          );
-  
-          if (response.ok) {
-            const data = await response.json();
-            setPerfil(data);
-            localStorage.setItem("user_profile", JSON.stringify(data)); 
-          } else {
-            throw new Error("Falha ao obter as permissões do usuário");
-          }
-        } catch (error) {
-          console.error(error);
-        }
-      };
-  
-      fetchData();
-    }
-  }, [user]);
+
   
   
 

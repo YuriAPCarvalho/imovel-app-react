@@ -1,4 +1,4 @@
-import { createContext,  useState, useContext, useEffect } from "react";
+import { createContext,  useState, useContext } from "react";
 
 export const AuthContext = createContext({});
 
@@ -52,6 +52,36 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const signinWithGoogle = async (googleToken) => {
+    try {
+      const response = await fetch("http://localhost:3000/login/google", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token: googleToken }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const { perfil, id, token } = data.usuario;
+        localStorage.setItem(
+          "user_token",
+          JSON.stringify({ email: data.usuario.email, token, perfil, id })
+        );
+        setUser(data.usuario);
+        return null;
+      } else {
+        throw new Error("Falha ao fazer login");
+      }
+    } catch (error) {
+      console.error(error);
+
+      return "Usuário ou senha incorreto";
+    }
+  };
+
+
   const signup = async (nome, email, senha) => {
     try {
       const response = await fetch("http://localhost:3000/usuario", {
@@ -88,7 +118,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, perfil, signed: !!user, signin, signup, signout }}
+      value={{ user, perfil, signed: !!user, signin, signinWithGoogle, signup, signout }}
     >
       {children}
     </AuthContext.Provider>

@@ -220,9 +220,7 @@ const AppContent = () => {
 
 const RoutesApp = () => {
   return (
-    <BrowserRouter>
       <AppContent />
-    </BrowserRouter>
   );
 };
 

@@ -8,7 +8,7 @@ import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import jwt_decode from "jwt-decode";
 
 const Signin = () => {
-  const { signin } = useAuth();
+  const { signin, signinWithGoogle } = useAuth();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -30,6 +30,18 @@ const Signin = () => {
 
     navigate("/ListaVisita");
   };
+
+  const responseGoogle = (response) => {
+    const googleToken = response.credential;
+    signinWithGoogle(googleToken)
+      .then((error) => {
+        if (error) {
+          setError(error);
+        } else {
+          navigate("/ListaVisita");
+        }
+      });
+  }
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -75,13 +87,9 @@ const Signin = () => {
         <Button Text="Entrar" onClick={handleLogin} />
         <GoogleOAuthProvider clientId="790835500681-6c603dvrqn5rqpeqg6biajrv9udf6s2h.apps.googleusercontent.com">
           <GoogleLogin
-            onSuccess={(credentialResponse) => {
-              var decoded = jwt_decode(credentialResponse.credential);
-              console.log(decoded);
-            }}
-            onError={() => {
-              console.log("Login Failed");
-            }}
+          clientId="790835500681-6c603dvrqn5rqpeqg6biajrv9udf6s2h.apps.googleusercontent.com"
+          onSuccess={responseGoogle}
+          onFailure={responseGoogle}
           />
         </GoogleOAuthProvider>
 

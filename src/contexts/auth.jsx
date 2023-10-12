@@ -1,4 +1,5 @@
-import { createContext,  useState, useContext } from "react";
+import { createContext, useState, useContext } from "react";
+import jwt_decode from "jwt-decode";
 
 export const AuthContext = createContext({});
 
@@ -18,10 +19,6 @@ export const AuthProvider = ({ children }) => {
     const storedUser = localStorage.getItem("user_token");
     return storedUser ? JSON.parse(storedUser) : null;
   });
-
-
-  
-  
 
   const signin = async (email, password) => {
     try {
@@ -53,13 +50,16 @@ export const AuthProvider = ({ children }) => {
   };
 
   const signinWithGoogle = async (googleToken) => {
+    const decodedToken = jwt_decode(googleToken);
+    const userEmail = decodedToken.email
+
     try {
       const response = await fetch("http://localhost:3000/login/google", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ token: googleToken }),
+        body: JSON.stringify({ email: userEmail, token: googleToken }),
       });
 
       if (response.ok) {
@@ -81,7 +81,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-
   const signup = async (nome, email, senha) => {
     try {
       const response = await fetch("http://localhost:3000/usuario", {
@@ -94,8 +93,7 @@ export const AuthProvider = ({ children }) => {
 
       if (response.ok) {
         const data = await response.json();
-        const { token } = data;
-        const { perfil, id } = data.usuario;
+        const { perfil, id, token } = data.usuario;
         localStorage.setItem(
           "user_token",
           JSON.stringify({ email, token, perfil, id })
@@ -118,7 +116,15 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, perfil, signed: !!user, signin, signinWithGoogle, signup, signout }}
+      value={{
+        user,
+        perfil,
+        signed: !!user,
+        signin,
+        signinWithGoogle,
+        signup,
+        signout,
+      }}
     >
       {children}
     </AuthContext.Provider>

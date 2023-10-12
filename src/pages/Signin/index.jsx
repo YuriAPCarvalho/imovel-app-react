@@ -87,8 +87,8 @@ const Signin = () => {
         <Button Text="Entrar" onClick={handleLogin} />
         <GoogleOAuthProvider clientId="790835500681-6c603dvrqn5rqpeqg6biajrv9udf6s2h.apps.googleusercontent.com">
           <GoogleLogin
-          clientId="790835500681-6c603dvrqn5rqpeqg6biajrv9udf6s2h.apps.googleusercontent.com"
-          onSuccess={responseGoogle}
+            clientId="790835500681-6c603dvrqn5rqpeqg6biajrv9udf6s2h.apps.googleusercontent.com"
+            onSuccess={responseGoogle}
           onFailure={responseGoogle}
           />
         </GoogleOAuthProvider>
